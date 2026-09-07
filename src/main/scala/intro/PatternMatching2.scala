@@ -47,7 +47,10 @@ object PatternMatching2 {
      *
      * Example: twice(List.range(0,4)) // List(0, 0, 1, 1, 2, 2, 3, 3) 
      */
-    def twice[A](xs : List[A]) : List[A] = ???
+    def twice[A](xs : List[A]) : List[A] = xs match {
+      case h :: t => h :: h :: twice(t)
+      case Nil => Nil
+    }
 
     /** Q6 (2p)
      * You had a few drinks too much after a party and recorded a message for  
