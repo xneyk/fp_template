@@ -62,5 +62,12 @@ object Lists {
       * Read the Scaladoc on the List class (https://www.scala-lang.org/api/2.12.3/scala/collection/immutable/List.html)
       * It contains some useful functions for this exercise. For this question library functions are allowed.
       */
-    def customAverage(xs: List[Int], x: Int, n: Int): Int = ???
+    def customAverage(xs: List[Int], x: Int, n: Int): Int = {
+      val bigger = (i :Int) => i > x
+      val biggerThanX = xs.filter(bigger)
+      val finalList = biggerThanX.take(n)
+      val combinedValue = finalList.sum
+      val size = finalList.size
+      combinedValue/size
+    }
 }
