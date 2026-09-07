@@ -1,0 +1,15 @@
+# Metals / VS Code
+.metals/
+.bloop/
+.vscode/
+
+# IntelliJ IDEA
+.idea/
+*.iml
+
+# Scala / Java
+*.class
+*.log
+
+# macOS
+.DS_Store
