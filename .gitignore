@@ -1,15 +1,20 @@
-# Metals / VS Code
-.metals/
-.bloop/
-.vscode/
+# Others
+*.zip
+
+# Maven
+target/
 
 # IntelliJ IDEA
 .idea/
 *.iml
 
-# Scala / Java
-*.class
-*.log
+# VS Code
+.vscode/
+
+# Metals / Scala
+.metals/
+.bloop/
+.bsp/
 
 # macOS
 .DS_Store
