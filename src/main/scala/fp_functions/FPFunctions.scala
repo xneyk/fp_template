@@ -215,13 +215,13 @@ object FPFunctions {
     // from PatternMatching2 (Q9)
     def append[A](xs: List[A], ys: List[A]) : List[A] = xs match {
       case Nil => ys
-      case h ::t => h:: append(t, ys)
+      case h :: t => h :: append(t, ys)
     }
 
     def recFlat(xs: List[Any]): List[Any] = xs match {
-      
-      case h :: t => append(h, recFlat(t))
       case Nil => Nil
+      case (h: List[Any]) :: t => append(h, recFlat(t))
+      case h :: t => h :: recFlat(t)
     }
 
     /** Q17 (5p)
@@ -234,8 +234,8 @@ object FPFunctions {
       * @return the result of folding `xs` with `f`.
       */
     def foldL[A, B](xs: List[A], f: (B, A) => B, init: B): B = xs match {
-      case h :: t => foldL(t, f, f(h, init))
-      case Nil => Nil
+      case h :: t => foldL(t, f, f(init, h))
+      case Nil => init
     }
 
     /** Q18 (5p)
@@ -249,9 +249,15 @@ object FPFunctions {
       * @tparam B the result type of the fold function.
       * @return the result of folding `xs` with `f`.
       */
-    def foldR[A, B](xs: List[A], f: (A, B) => B, init: B): B = xs match {
-      case h :: t => foldL(h :: Nil, f, foldR(t, f, h))
-      case Nil => Nil
+    def foldR[A, B](xs: List[A], f: (A, B) => B, init: B): B = {
+        val g: B => B =
+          foldL[A, B => B](
+            xs,
+            (acc: B => B, x: A) => (y: B) => f(x, acc(y)),
+            (y: B) => y
+          )
+
+        g(init)
     }
 
     /** Q19 (5p)
@@ -264,17 +270,6 @@ object FPFunctions {
       * @tparam B the type of the items in `ys`.
       * @return a list of tuples of items in `xs` and `ys`.
       */
-
-    // def tailOf(xs: List[A]): List[A] = xs match {
-    //   case h :: t => t
-    //   case Nil => Nil
-    // }
-
-    // def headOf(xs: List[A]) : Option[A] = xs match {
-    //   case h :: t => Some(h)
-    //   case Nil => None
-    // }
-
     def zip[A, B](xs: List[A], ys: List[B]): List[(A, B)] = xs match {
       case h :: t if (ys == Nil) => Nil
       case Nil => Nil
