@@ -46,6 +46,6 @@ object FPPractice {
       */
     def headSumsTail(xs: List[List[Int]]): Option[Int] = {
       val headSumsTailCheck = (i: List[Int]) => i.head == i.sum - i.head
-      xs.find(headSumsTailCheck).map((i:List[Int])=>i.head)
+      xs.find(headSumsTailCheck).map((i:List[Int])=>i.size)
     }
 }
