@@ -31,10 +31,14 @@ object Practice {
       * @param xs list to process.
       * @return the maximum value in the list.
       */
-    def maxValue(xs: List[Int]): Int = xs match {
-      case h :: t if (h > maxValue(t)) => h
-      case h :: t => maxValue(t)
-      case Nil => Int.MinValue
+    def maxValue(xs: List[Int]): Int = {
+      maxHelper(xs, Int.MinValue)
+    }
+
+    def maxHelper(xs: List[Int], previous: Int): Int = xs match{
+      case h :: t if(h < previous) => maxHelper(t, previous)
+      case h :: t => maxHelper(t, h)
+      case Nil => previous
     }
 
     /** Q12 (3p)
@@ -72,7 +76,7 @@ object Practice {
     // a helper method which you've written yourself
     def myHelper[A](xs: List[A], f: A => Boolean, i: Int) : List[A] = xs match {
       case h :: t if(f(h) && (i % 2 == 0)) => h :: myHelper(t, f, i+1)
-      case h :: t if(f(h)) => h :: myHelper(t, f, i+1)
+      case h :: t if(f(h)) => myHelper(t, f, i+1)
       case h :: t => myHelper(t, f, i)
       case Nil => Nil
     }
