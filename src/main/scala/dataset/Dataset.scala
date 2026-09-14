@@ -1,10 +1,11 @@
 package dataset
 
-import dataset.util.Commit.Commit
+import dataset.util.Commit.{Commit, File}
 
-import java.text.SimpleDateFormat
+import java.text.{DateFormat, SimpleDateFormat}
 import java.util.SimpleTimeZone
 import scala.math.Ordering.Implicits._
+import java.util.Date
 
 /**
  * Use your knowledge of functional programming to complete the following functions.
@@ -25,7 +26,15 @@ object Dataset {
    * @param input the list of commits to process.
    * @return the average amount of additions in the commits that have stats data.
    */
-  def avgAdditions(input: List[Commit]): Int = ???
+  def avgAdditions(input: List[Commit]): Int = {
+    val additionsList = input.filter((i: Commit) => i.stats.isDefined).map((i: Commit) => i.stats.get.additions)
+    additionsList.sum/additionsList.size
+  }
+
+  def getTime(date: Date): Int = {
+    val longvalue = ( date.getTime % 86400000) / 3600000
+    longvalue.toInt
+  }
 
   /** Q24 (4p)
    * Find the hour of day (in 24h notation, UTC time) during which the most javascript (.js) files are changed in commits.
@@ -36,7 +45,18 @@ object Dataset {
    * @param input list of commits to process.
    * @return the hour and the amount of files changed during this hour.
    */
-  def jsTime(input: List[Commit]): (Int, Int) = ???
+  def jsTime(input: List[Commit]): (Int, Int) = {
+    val mapOfAllFiles = input.groupBy((i: Commit) => getTime(i.commit.committer.date)).mapValues((i: List[Commit]) => i.map((j: Commit) => j.files.map((k: File) => k.filename.get)))
+    val mapOfFiles = mapOfAllFiles.mapValues((i: List[List[String]]) => i.map((j: List[String]) => j.filter((k: String)=> k.matches(".*\\.js"))))
+    val mapOfTimesLists = mapOfFiles.mapValues((i: List[List[String]]) => i.map((j: List[String]) => j.size))
+    val mapOfTimes = mapOfTimesLists.mapValues((i:List[Int]) => i.sum)
+
+    print(mapOfFiles)
+    print(mapOfTimesLists)
+    print(mapOfTimes)
+    mapOfTimes.maxBy(_._2)
+
+  }
 
 
   /** Q25 (5p)
@@ -48,7 +68,13 @@ object Dataset {
    * @param repo  the repository name to consider.
    * @return the name and amount of commits for the top committer.
    */
-  def topCommitter(input: List[Commit], repo: String): (String, Int) = ???
+  def topCommitter(input: List[Commit], repo: String): (String, Int) = {
+    val filteredList = input.filter((p:Commit) => p.url.matches(".*"+repo+".*"))
+    val mapOfCommits = filteredList.groupBy((i: Commit) => i.commit.author.name)
+    val mapOfTimes = mapOfCommits.mapValues((i:List[Commit]) => i.size)
+
+    mapOfTimes.maxBy(_._2)
+  }
 
   /** Q26 (9p)
    * For each repository, output the name and the amount of commits that were made to this repository in 2019 only.
