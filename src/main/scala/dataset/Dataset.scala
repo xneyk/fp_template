@@ -36,6 +36,8 @@ object Dataset {
     longvalue.toInt
   }
 
+
+
   /** Q24 (4p)
    * Find the hour of day (in 24h notation, UTC time) during which the most javascript (.js) files are changed in commits.
    * The hour 00:00-00:59 is hour 0, 14:00-14:59 is hour 14, etc.
@@ -130,8 +132,8 @@ object Dataset {
   }
 
   def timeofday(time: Int):String = time match {
-    case time if (time >= 12 && time < 18) => "afternoon"
-    case time if (time >= 18 && time < 21) => "evening"
+    case time if (time >= 12 && time < 17) => "afternoon"
+    case time if (time >= 17 && time < 21) => "evening"
     case time if (time >= 5 && time < 12) => "morning"
     case _ => "night"
   }

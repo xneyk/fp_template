@@ -250,7 +250,7 @@ object FPFunctions {
       * @return the result of folding `xs` with `f`.
       */
     def foldR[A, B](xs: List[A], f: (A, B) => B, init: B): B = xs match {
-      case h :: t => foldL(foldR(t, f, init) :: Nil,  (b: B, a: A) => f (a, b), h)
+      case h :: t => foldL(h :: Nil,  (b: B, a: A) => f (a, b), foldR(t, f, init))
       case Nil => init
     }
 
