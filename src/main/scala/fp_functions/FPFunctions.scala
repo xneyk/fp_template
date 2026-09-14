@@ -217,10 +217,10 @@ object FPFunctions {
       case Nil => ys
       case h :: t => h :: append(t, ys)
     }
-
+    
     def recFlat(xs: List[Any]): List[Any] = xs match {
       case Nil => Nil
-      case (h: List[Any]) :: t => append(h, recFlat(t))
+      case (h: List[Any]) :: t => append(recFlat(h), recFlat(t))
       case h :: t => h :: recFlat(t)
     }
 
