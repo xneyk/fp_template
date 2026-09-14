@@ -86,7 +86,13 @@ object Dataset {
    *         Example output:
    *         Map("KosDP1987/students" -> 1, "giahh263/HQWord" -> 2)
    */
-  def commitsPerRepo(input: List[Commit]): Map[String, Int] = ???
+  def commitsPerRepo(input: List[Commit]): Map[String, Int] = {
+    input
+      .groupBy(
+        commit => commit.url.split("/")(4) + "/" + commit.url.split("/")(5)
+      )
+      .map { case (repo, commits) => (repo, commits.size) }
+  }
 
 
   /** Q27 (9p)
