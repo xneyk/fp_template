@@ -86,7 +86,10 @@ object Dataset {
    *         Map("KosDP1987/students" -> 1, "giahh263/HQWord" -> 2)
    */
   def commitsPerRepo(input: List[Commit]): Map[String, Int] = {
+    val formater = new SimpleDateFormat("yyyy")
+
     input
+      .filter(i => formater.format(i.commit.committer.date) == "2019")
       .groupBy(
         commit => commit.url.split("/")(4) + "/" + commit.url.split("/")(5)
       )
