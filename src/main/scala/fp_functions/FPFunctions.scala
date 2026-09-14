@@ -249,16 +249,12 @@ object FPFunctions {
       * @tparam B the result type of the fold function.
       * @return the result of folding `xs` with `f`.
       */
-    def foldR[A, B](xs: List[A], f: (A, B) => B, init: B): B = {
-        val g: B => B =
-          foldL[A, B => B](
-            xs,
-            (acc: B => B, x: A) => (y: B) => f(x, acc(y)),
-            (y: B) => y
-          )
-
-        g(init)
+    def foldR[A, B](xs: List[A], f: (A, B) => B, init: B): B = xs match {
+      case h :: t => foldL(foldR(t, f, init) :: Nil,  (b: B, a: A) => f (a, b), h)
+      case Nil => init
     }
+
+  
 
     /** Q19 (5p)
       * Returns an iterable collection formed by iterating over the corresponding items of `xs` and `ys`.
