@@ -51,9 +51,6 @@ object Dataset {
     val mapOfTimesLists = mapOfFiles.mapValues((i: List[List[String]]) => i.map((j: List[String]) => j.size))
     val mapOfTimes = mapOfTimesLists.mapValues((i:List[Int]) => i.sum)
 
-    print(mapOfFiles)
-    print(mapOfTimesLists)
-    print(mapOfTimes)
     mapOfTimes.maxBy(_._2)
 
   }
@@ -101,7 +98,15 @@ object Dataset {
    * @param input the list of commits to process.
    * @return 5 tuples containing the file extension and frequency of the most frequently appeared file types, ordered descendingly.
    */
-  def topFileFormats(input: List[Commit]): List[(String, Int)] = ???
+  def topFileFormats(input: List[Commit]): List[(String, Int)] = {
+    val flatMap = input.flatMap((i:Commit) =>  i.files)
+    val stringList = flatMap.map((i:File) => i.filename.get)
+    val filemap = stringList.groupBy(file => file.split("\\.")(file.split("\\.").length -1))
+    val filecount = filemap.mapValues(i => i.size)
+    val filecountList = filecount.toList
+    filecountList.sortBy((a) => -a._2 ).take(5)
+
+  }
 
 
   /** Q28 (9p)
@@ -117,5 +122,17 @@ object Dataset {
    *
    * Hint: for the time, use `SimpleDateFormat` and `SimpleTimeZone`.
    */
-  def mostProductivePart(input: List[Commit]): (String, Int) = ???
-}
+  def mostProductivePart(input: List[Commit]): (String, Int) = {
+    val mapofCommits = input.groupBy((i: Commit) => timeofday(getTime(i.commit.committer.date)))
+    val mapOfCounts = mapofCommits.mapValues((i: List[Commit]) => i.size)
+    mapOfCounts.maxBy(_._2)
+
+  }
+
+  def timeofday(time: Int):String = time match {
+    case time if (time >= 12 && time < 18) => "afternoon"
+    case time if (time >= 18 && time < 21) => "evening"
+    case time if (time >= 5 && time < 12) => "morning"
+    case _ => "night"
+  }
+  }
